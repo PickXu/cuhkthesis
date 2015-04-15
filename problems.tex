@@ -1,0 +1,276 @@
+\section{Problem}
+\label{sec:problem}
+
+%\begin{table}[t]
+%  \centering
+%  \caption{Major notation used in the paper.}
+%  \label{tab:notation}
+%  \renewcommand{\arraystretch}{1.15}
+%  \begin{tabular}[c]{|c|l|}
+%    \hline
+%    {\bf Notation}  &  {\bf Meaning} \\
+%    \hline
+%    \hline
+%    \multicolumn{2}{|c|}{Defined in Section \ref{sec:normal}} \\
+%    \hline
+%    $N$ & the number of storage nodes \\
+%    \hline
+%       $n$ & the coding stripe size\\
+%        \hline
+%       $k$ & the number of data chunks in a coding stripe \\
+%        \hline
+%    $t$ & the number of files in a distribution buffer \\
+%    \hline
+%        $U_i$ & number of unique chunks of file $i$\\
+%    \hline
+%    $u_{i,j}$ & number of unique chunks of file $i$ on node $j$\\
+%    \hline
+%    $d_{i,j}$ & number of duplicate chunks of file $i$ on node $j$\\
+%    \hline
+% 	$E_i$ & the number of chunks to download from a storage node in \\
+%	&  the theoretical even distribution of the $i$-th file\\
+%        \hline
+%    $G$ & gap between a distribution of the data chunks of a file and \\
+%     & the theoretical even distribution of the file\\
+%    \hline
+% $c$ & number of data chunks on node $j$ in a distribution buffer\\
+%    \hline
+%      $\mathbf{w}_j$ & download cost associated with node $j$ \\
+%        \hline
+%\multicolumn{2}{|c|}{Defined in Section \ref{sec:algorithm}} \\
+%    \hline
+%$l_{i,j}$ & list of locally unique chunks for file $i$ on node $j$\\
+%        \hline
+%$\mathbf{I}_i$ & the gap value of file $i$\\
+%        \hline
+%$S$ & the summation of gap values of all the considered files\\
+%        \hline
+%$\mathbf{P}$ & placement decision for all chunks in a batch\\
+%        \hline
+%%$\mathbf{pd}_{i,j,k}$ & number of parity blocks on node $k$ that protect blocks \\
+%%& on node $j$ of file $i$\\
+%%\hline
+%  \end{tabular}
+%\end{table}
+
+%In this section, we address the trade-off between write balance and read
+%balance in a distributed deduplication storage system.  
+
+We formulate a combinatorial optimization problem that searches for a data
+placement policy that maximizes read balance, while preserving storage
+balance.  We argue that the problem has a huge solution space, which motivates
+us to design an efficient but accurate data placement policy to solve the
+problem.  We also address how our problem can be extended for heterogeneous
+settings. 
+
+We consider a reliable distributed storage system with $N$ nodes.  It deploys
+$(n,k)$ erasure coding, where $k < n \le N$, and places each stripe across $n$
+nodes.  Suppose that we store $t$ files, and check if the chunks of each file
+to be written can be deduplicated with the currently stored chunks (see
+Section~\ref{subsec:deduplication}). Let $u_{i,j}$ and $d_{i,j}$ be the
+numbers of unique chunks and duplicate chunks, respectively, of file~$i$
+in node~$j$, where $1\le i\le t$ and $1\le j\le N$. Let $U_i =
+\sum_{j=1}^{N} u_{i,j}$ be the total number of unique chunks of file~$i$.
+
+%Three types of balance are involved in a data distribution: i){read balance}; ii){write balance} and iii)\emph{storage balance}.
+%In our scenario, read balance indicates that, for the $i$ file, the summations of the number of duplicate chunks on a node and the number of unique chunks to be distributed to the same node are identical for storage nodes, i.e. $u_{i,0}+d_{i,1} = \dots =u_{i,n-1}+d_{i,n-1}, i \in {0,\dots,t-1}$.
+%Write balance means distributing equal number of unique chunks to each of the storage nodes in a batch distribution. 
+%Storage balance requires that the overall consumption of disk space on each storage node is equal.
+%Our main purpose is to achieve read balance in each batch distribution of unique data chunks, and we want to preserve the storage balance and write balance at the same time.
+
+\subsection{Optimization Problem}
+\label{subsec:p_form}
+
+We consider a storage system that is bottlenecked by the network I/O
+bandwidth, and its data in different nodes is accessed in parallel.  We first
+assume that all nodes are homogeneous, while we later extend the model for a
+heterogeneous setting. 
+
+Suppose that the read time of a file is linear to the maximum number of data
+chunks (including unique and duplicate chunks) being read in a node.  For
+file~$i$, its read time (denoted by $M_i$) is given by:
+%
+\begin{equation}
+M_i = \max_{1\le j\le N}\{ u_{i,j}+d_{i,j}\}, \textrm{ where $1\le i\le 
+t$}.  
+\end{equation}
+%
+Its lower bound (denoted by $E_i$) is the number of data chunks retrieved 
+from a node when they are evenly placed across all nodes, i.e., when 
+$E_i = u_{i,1} + d_{i,1} = u_{i,2} + d_{i,2} = \cdots = u_{i,N} + d_{i,N}$.
+We can show that 
+\begin{equation}
+E_i = \frac{1}{N}\sum_{j=1}^{N} (u_{i,j}+d_{i,j}), \textrm{ where $1\le i\le
+t$.}
+\end{equation}
+
+We maintain read balance by minimizing the difference between $M_i$ and $E_i$
+for file~$i$.  While there are various ways to characterize read balance, in
+this paper, we consider one possible metric.  We define a 
+{\em read balance gap} $G_i$, which is a function of $u_{i,j}$'s and
+$d_{i,j}$'s, as follows:
+\begin{equation}
+G_i = 1 - \frac{E_i}{M_i}, \textrm{ where $1\le i\le t$.}
+\label{eq:gap}
+\end{equation}
+
+Read balance of file~$i$ is achieved by minimizing $G_i$, which attains
+minimum at zero (i.e., when the data chunks of file~$i$ are evenly placed 
+across nodes).  When $G_i$ is close to one, the degree of read imbalance of
+file~$i$ becomes more severe.  
+
+%More severe imbalance in data distribution leads to larger gap value, and, therefore, our objective is to minimize the gap value for each file on the write path.  The theoretical number $E_i$ is calculated based on the total number of chunks of the file and the number of storage nodes, and is the lower bound of the maximum number of chunks of the $i$-th file to download from a node for any distribution.  The value itself by no means implies that there is a method to achieve the even distribution, or the even distribution is achievable at all.
+
+With deduplication, the distribution of duplicate chunks of a file depends on
+the previously stored files.  Rearranging the placement of duplicate chunks
+may achieve a more balanced placement of the file, but this incurs expensive
+I/Os and unbalances the placements of previous files.  Thus, we fix
+$d_{i,j}$'s in the gap $G_i$ (see Equation~\ref{eq:gap}), and we carefully
+place the unique chunks (i.e., search for a distribution $u_{i,j}$'s) to
+minimize $G_i$. 
+
+%%%%%%%%%WHY CONSIDER MULTIPLE FILES%%%%%%%%%%
+In addition to read balance, we also balance the storage of the unique chunks
+of $t$ files.  We write the same number of unique chunks (denoted by $C$) to
+each node, given by:
+\begin{equation}
+C = \frac{1}{N}\sum_{i=1}^{t} U_i, 
+\end{equation}
+%
+To make memory management easier, we write chunks on a {\em per-batch} basis,
+in which we fix the number of unique chunks $C$ to be written to each node and
+determine the number of files $t$ accordingly.  Specifically, we first buffer
+all $C$ unique chunks to be written to each node (i.e., a total of $N\times C$
+unique chunks in a batch), and then decide the appropriate data placement.  
+%To integrate with erasure coding, we first assume that the batch size $N\times C$
+%is divisible by $k$.  After we decide the placement of the unique chunks in a 
+%batch, we group every $k$ unique chunks that are assigned to $k$ distinct
+%nodes as the data chunks of a stripe. We then generate additionally $n-k$
+%parity chunks and place them on $n-k$ other distinct nodes.  We discuss how we
+%evenly place parity chunks when we discuss implementation details in
+%Section~\ref{sec:impl}. 
+
+%For example, we can randomly choose $n-k$ out of $N-k$ distinct nodes
+%(excluding the $k$ nodes that store the data chunks) for each stripe.  In
+%this work, we do not consider the details of how to evenly place the parity
+%chunks. 
+
+%is based on the design of parity declustering \cite{Holland94}, 
+%map each of the selected $k$ unique chunks in the batch as a stripe in the
+%parity declustering table and assign their parity chunks according to the
+%layout of the table.
+
+%%%%%%%%%Re-FORMULATE THE OBJECTIVES%%%%%%%%%%%
+We now pose a combinatorial optimization problem, whose objective is to
+find a data placement policy (i.e., a set of $u_{i,j}$'s) that achieves read
+balance while preserving storage balance.
+
+\begin{problem}
+\label{problem:gap}
+\begin{align*}
+\begin{split}
+\textrm{Minimize} \ \ & \sum_{i=1}^{t} G_i \\
+\textrm{subject to} \ \ & \sum_{j=1}^{N} u_{i,j} = U_i, 
+	\>\>\forall i\in[1,t]\\
+& \sum_{i=1}^{t} u_{i,j} = C, \\
+& 0\le u_{i,j} \le U_i, \>\>\forall i\in[1,t], j\in[1,N].
+\end{split}
+\end{align*}
+\end{problem}
+%
+Here, the objective is to minimize the sum of the read balance gaps
+$G_i$'s for all file~$i$.  The first constraint ensures that all unique
+chunks of each file will be written to one of the nodes.  The second
+constraint preserves storage balance by writing $C$ unique chunks to each node.
+The last constraint bounds the range of each $u_{i,j}$.  
+
+%Now, in a batch distribution problem, we attempt to improve the read balance of all the $t$ files, and we consider the summation of Formula~(\ref{eqn:min_max}) for the $t$ files as the overall gap between distribution of data chunks of the $t$ files and the even distributions of their data chunks.  Our objective is to minimize the overall gap for the $t$ files in a batch distribution, and a batch distribution of the $t$ files is feasible only if each file is assigned non-negative integral number of chunks on each node, total number of unique chunks on each node from all the files is equal to a fixed quota, $c$, and all unique chunks of a file inside the buffer are distributed.
+
+
+%In addition to achieving balance of number of chunks on storage nodes for each file, we need to preserve the balance of total number of chunks on each storage node. 
+%We call the former one \textit{read balance}, and the latter one \textit{storage balance}. 
+%These two kinds of balance are not the same, and are not necessarily positively related with each other. 
+%To achieve read balance, more unique chunks of a file should be distributed to node with less duplicate chunks of the file. 
+%As for storage balance, number of unique chunks that are distributed to each node should always be identical.
+%In this sense, if we handle distribution of unique chunks for each single file, there is no way to achieve the two types of balance at the same time.
+%Therefore, we decided to consider unique chunks of a group of files for each distribution. 
+%With unique chunks of multiple files, even under the constraint that the number of total unique chunks to each storage node is equal, each single file can have different number of unique chunks assigned to each node as unique chunks of the rest of files can balance the total number.
+%Note that writing identical amount of data to each storage node not only achieves storage balance, but also ensures \textit{write balance}, which accelerates the file upload operation.
+
+
+
+%Instead of fixing the number of files to consider for each distribution, we fix the number of unique chunks for each distribution so that the memory management is easier. 
+%As our system incorporates erasure coding function to protect uploaded data, besides balancing the load of unique data chunks, our distribution module should take the balance of parity chunks into consideration as well. 
+%Based on these requirements, we adopt the \textit{parity declustering}~\cite{holland92} distribution scheme as it balances load of parity chunks via rotation and it improves the recovery performance in present of node failures.
+%In addition, it scales well when the number of storage nodes is much larger than the coding stripe size.
+%To incorporate parity declustering into our design, we fix the size of the distribution buffer as the same as that of a parity declustering table under identical configurations. 
+%In the buffer, parties chunks are pre-assigned according to design of parity declustering scheme, and unique chunks can only be assigned to the rest spaces.
+
+%In summary, the objective of our normal read problem is to minimize the summation of maximum number of chunks on storage node for each file, under the constraints that all the unique chunks in the distribution buffer should be distributed and numbers of unique chunks assigned to all nodes are equal.
+
+%\textbf{Min-Max Metric} 
+%We measure the performance of each intermediate distribution with a min-max metric defined as
+%\begin{align}
+%\mathcal{M}(u_i,d_i) = 1 - \frac{\sum_{j=0}^{n-1} (u_{i,j}+d_{i,j})}{max_{j=0}^{n-1} \{u_{i,j}+d_{i,j}\} \times n}
+%\label{eqn:min_max}
+%\end{align}
+%The key property of this metric is that, as the maximum number of chunks on a node of a file increases, the metric of the file will increase.
+%We normalize the metric so that each file is identically optimized regardless of its file size. 
+%Hence, our optimization objective is equivalent to minimizing the sum of the metrics for all files in a distribution buffer via re-arranging the distribution decision on the unique chunks.
+%\textbf{Problem Statement} 
+
+%%%%%% Brute-force algorithm fails due to the complexity %%%%%%%%%%%%
+However, Problem~\ref{problem:gap} has a huge solution
+space.  Note that we store a total of $N\times C$ unique chunks to $N$ nodes.
+There are $N\times C \choose C$ ways to assign $C$ unique chunks to the first
+node, $(N-1)\times C \choose C$ ways to assign another set of $C$ unique
+chunks to
+the second node, and so forth.  Thus, the total number of ways to place all
+unique chunks is ${N\times C \choose C} \times {(N-1) \times C \choose C} 
+\times \cdots \times {C \choose C} = \frac{(N\times C)!}{(C!)^N}$.  The
+solution space is too large even for small $N$ and $C$.  For instance, when $N
+= 5$ and $C = 4$, there are more than $3 \times 10^{11}$ possible solutions.
+Since the objective function depends on the current deduplication patterns
+(i.e., the number of duplicate chunks in each node), the optimal solution
+needs to be determined in real time.  However, the huge solution space makes
+the extensive search for an optimal solution infeasible.  In
+Section~\ref{sec:algorithm}, we propose a greedy algorithm to efficiently
+solve the problem. 
+
+%Note that our focus is on improving read performance of uploaded files with acceptable overheads on the write path, instead of finding the best algorithm to solve Problem~\ref{eq:normal_problem}.
+
+\subsection{Heterogeneity Awareness}
+\label{subsec:heterogeneity}
+
+Modern distributed storage systems are often composed of heterogeneous nodes,
+so the read latencies of data chunks differ across nodes. We modify 
+Problem~\ref{problem:gap} by introducing a weight $w_j$ for each node~$j$,
+which is defined as the read cost per chunk for node~$j$.  Thus, the read cost
+of file~$i$ (denoted by $M_i'$) is 
+$M_i' = \max_{1\le j\le N} \{w_j (u_{i,j}+d_{i,j})\}$. 
+
+First, we derive the lower bound of the read cost of file~$i$ (denoted by
+$E_i'$), which is achieved when the read costs are evenly distributed across
+nodes, i.e., $E_i' = w_1(u_{i,1} + d_{i,1}) = w_2(u_{i,2} + d_{i,2}) = \cdots
+= w_{N}(u_{i,N} + d_{i,N})$.  Thus, 
+%
+\begin{align}
+E_i' = \frac{\sum_{j=1}^{N}(u_{i,j}+d_{i,j})}{\sum_{j=1}^{N}\frac{1}{w_j}}.
+\end{align}
+%
+The read balance gap (denoted by $G_i'$) between the maximum read cost of
+file~$i$ and its lower bound can be defined as:
+\begin{align}
+G_i' = 1 - \frac{E_i'}{M_i'}.
+\label{eqn:hete_min_max}
+\end{align}
+We replace the objective function of Problem~\ref{problem:gap} with
+$\sum_{i=1}^{t}G_i'$ and solve the problem subject to the same constraints. 
+
+We can obtain the weights $w_j$'s for all nodes by, for example, periodic
+probe measurements \cite{chowdhury13}.  Then the weight $w_j$ may represent
+the reciprocal of the measured link bandwidth of node~$j$.  We assume that the
+weights are fairly stable and do not vary significantly over time, so the
+resulting data placement reflects the current system conditions.  We pose the
+issue of performing accurate weight measurements as future work. 
+

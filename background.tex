@@ -1,0 +1,109 @@
+\chapter{Background Study}
+\section{Basics}
+\label{sec:background}
+
+We present background details of a reliable distributed
+deduplication storage system considered in this paper.  
+
+%While erasure coding does not affect the read imbalance issue caused by
+%deduplication, and we implement erasure coding in our prototype so as to see
+%how the read imbalance affects performance of a common reliable distributed
+%storage system.
+
+\subsection{Deduplication}
+\label{subsec:deduplication}
+%\subsubsection{Unique Block; Duplicate Block}
+
+Deduplication \cite{quinlan02} improves storage efficiency by removing data
+with identical content.  It divides input data into fixed-size or
+variable-size {\em chunks}, each of which is identified by a {\em fingerprint}
+computed by a cryptographic hash (e.g., MD5, SHA-1) of the chunk content.  For
+variable-size chunking, the chunk boundaries are defined by content (e.g.,
+Rabin fingerprinting \cite{rabin81}), and the chunk size distribution is
+configured by the average, minimum, and maximum chunk sizes.  In both
+fixed-size chunking and variable-size chunking, two chunks are said to be
+identical if their fingerprints are identical, and we assume that the chance
+of fingerprint collisions of different chunks is negligible \cite{quinlan02}.
+We also assume that a deduplication system maintains a fingerprint index to
+keep track of the chunks that are already stored.  
+
+Deduplication can be done either {\em inline}, which removes redundancy on the
+write path, or {\em out-of-line}, which first writes data to storage and later
+removes redundancy.  Out-of-line deduplication generally incurs extra storage
+and I/O overhead, so this paper focuses on inline deduplication.
+
+In inline deduplication, for a given set of chunks to be written, we first
+compare them, by querying the fingerprint index, with the currently stored
+chunks.  If the fingerprint of a written chunk is new to the index, then the
+system regards the chunk as a {\em unique chunk}, meaning that the chunk will
+be stored and its fingerprint will be added to the index.  Otherwise, if the
+fingerprint already exists, the system regards it as a {\em duplicate chunk},
+meaning that the chunk is identical to another unique chunk of some previous
+files and will not be stored.   The system will create a reference for the
+duplicate chunk to refer to an already stored chunk. 
+
+%In fixed-size chunking, data is divided into chunks of identical size, and
+%Venti \cite{quinlan02} adopts fixed size 4KB disk blocks as its deduplication
+%chunks.  In variable-size chunking, data is divided based on its content, and
+%Rabin-fingerprint \cite{rabin81} is one of the techniques to efficiently .
+%Usually, mean, minimum and maximum chunk sizes are set in variable-size
+%chunking to control the distribution of sizes of chunks.
+
+\subsection{Erasure Coding}
+%\subsubsection{Stripe; Data Block; Code Block; Reed-Soloman Codes}
+
+We consider a distributed storage system that achieves reliability via erasure
+coding, which provides higher fault tolerance than replication, but incurs
+significantly less storage overhead \cite{weatherspoon02}.  We consider an
+$(n,k)$ erasure code configured with
+two parameters $n$ and $k$, where $k<n$.  It evenly divides data into $k$
+equal-size {\em data chunks}, and encodes them to form additional $n-k$ 
+{\em parity chunks}, such that any $k$ out of $n$ data/parity chunks can
+reconstruct the original data. The collection of $n$ data/parity chunks, which
+we call a {\em stripe}, will then be distributed to $n$ distinct nodes.
+
+%We consider {\em systematic} coding, in which $k$ chunks of a stripe are
+%uncoded data (which we call {\em data chunks}) and the remaining chunks are
+%coded data (which we call {\em parity chunks}).  With systematic coding, if
+%there is no node failure, data chunks are directly accessible.  
+If some data chunks (no more than $n-k$) are unavailable due to node failures,
+reads to unavailable data chunks are {\em degraded}, as they need to retrieve
+any $k$ data/parity chunks of the same stripe from other non-failed nodes for
+decoding.  
+   
+\subsection{Integration}
+
+To deploy both deduplication and erasure coding in a distributed storage
+system, we first apply deduplication to remove duplicate chunks, followed by
+applying erasure coding to the remaining unique chunks.  Specifically, after
+deduplication, we divide data into non-overlapping groups of $k$ unique chunks
+that are considered to be the data chunks of an erasure coding stripe.  We then
+encode the $k$ data chunks to form additional $n-k$ parity chunks.  
+
+If fixed-size chunking is used in deduplication, the size of each encoded chunk
+will remain the same.  On the other hand, if variable-size chunking is used,
+we first pad each $k$ unique chunks with zeros to the maximum chunk size that
+has been configured before encoding.  We store only the non-padded data
+chunks, and the parity chunks that have the maximum chunk size.  If we need to
+decode unavailable data chunks due to failures, we first locally pad all
+chunks with zeros to the maximum chunk size before decoding. 
+
+%For space efficiency, only the non-padded $k$ unique data chunks, as well as
+%the $n-k$ parity chunks, are uploaded to the storage system.  In case of node
+%failures, each of the $k$ data chunks of stripe will be padded with bits of
+%zeros into maximum chunking size locally before decoding.
+
+%\subsection{Data Distribution in Distributed Storage System}
+%\subsubsection{Round-Robin Distribution; Random Distribution}
+%\subsubsection{Parity Declustering Technique}
+
+%Data distribution is crucial to the performance on various aspects of a distributed storage system.
+%\textit{Load balancing} is one of the most sigificant concerns in designing a data distribution algorithm. 
+%By load balancing, it not only indicates balancing the disk consumption on each storage node, but can also imply balancing the amount of data that are targeted at each storage node in a data write.
+%The former balancing avoids the case that the capacity of one of the storage nodes is used up before others, and the latter one improves the write throughput by utilizing high write concurrency.
+%Existing systems either randomly distribute data to storage nodes favoring nodes with less utilized disks, like that in GPFS \cite{Schmuck02} or distribute data to different storage nodes in a round-robin fashion, like that in FAB \cite{Saito04}, to achieve the load balance.
+%
+%In current distribution storage systems, several new factors pose challenges to existing load balancing designs.
+%First, the introduction of erasure codes requires a storage system to balance not only the data load but also load of the redundancy generated by erasure codes so that potential degraded reads and recovery traffic can be balanced.
+%In addition, most distributed storage systems consist of larger number of storage nodes than its coding stripe size, and how to distribute data of a stripe to the large storage pool also deserves thorough design.
+%\textit{Parity declustering} \cite{holland92} handles both the data balance and the redundancy balance in such kind of distributed storage systems in a systematic way.

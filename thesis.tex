@@ -1,0 +1,120 @@
+\documentclass[a4paper, 12pt,twoside]{report}
+\usepackage{algpseudocode}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{ctable}
+\usepackage{cite}
+\usepackage{graphics}
+\usepackage{thesis}
+\usepackage{latexsym}
+\usepackage[dvips]{epsfig}
+\usepackage[inner=4cm,outer=2.5cm]{geometry}
+\usepackage{url}
+\usepackage{color}
+\usepackage{algorithm, subfigure}
+\usepackage[font={large}]{caption}
+
+\topmargin	0.0cm
+\textheight    21cm
+\graphicspath{{figs/}}
+\newtheorem{problem}{\hspace{-1em}Problem}
+%\renewcommand{\arraystretch}{1.2}
+
+%=======================================================
+\begin{document}
+
+%set double line spacing
+\linespread{1.3}
+
+%cover page information
+
+\thesistitle{Even Data Placement for Load Balance in Reliable Distributed Deduplication Storage Systems}
+\authorname{XU, Min}
+\degree{Master of Philosophy}
+\programme{Computer Science and Engineering}
+%\supervisor{Prof. PAN Peter}
+\submitdate{June 2015}
+\coverpage
+\NewPage
+
+
+%=======================================================
+
+\pagenumbering{roman}
+
+%abstract
+
+\abstractpage
+\abstractzhpage
+
+%=======================================================
+
+%publication list
+
+\publistpage
+
+
+%=======================================================
+
+%acknowledgement
+
+\acknowledgementpage
+
+%=======================================================
+
+%preamble sections
+
+\tableofcontents
+\listoffigures
+\listoftables
+
+
+%=======================================================
+
+%initialization
+
+\newpage
+\setcounter{page}{0}
+\pagenumbering{arabic}
+\pagestyle{headings}
+
+
+%=======================================================
+
+%insert the chapters
+
+\input intro.tex
+\input background.tex
+\input related.tex
+\chapter{Even Data Placement}
+\input motivate.tex
+\input problems.tex
+\input algorithms.tex
+\input implementation.tex
+\input evaluation.tex
+\input conclusions.tex
+
+
+%=======================================================
+
+%appendix
+
+\appendix
+%\input ./proof/proof.tex
+
+
+%=======================================================
+
+%bibliography
+
+\newpage
+\addcontentsline{toc}{chapter}{Bibliography}
+\bibliographystyle{ieee}
+\bibliography{paper}
+
+
+
+\end{document}
+

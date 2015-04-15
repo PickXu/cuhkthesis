@@ -1,0 +1,18 @@
+\chapter{Conclusions}
+\section{Summary}
+\label{sec:conclusion}
+
+We study the load balance problem in a distributed storage system that employs
+two well-developed technologies namely deduplication and erasure coding.  We
+point out that deduplication inherently cannot maintain read balance as the
+deduplicated chunks are unevenly distributed across nodes.  We formulate a
+combinatorial optimization problem, and propose the 
+{\em Even Data Placement (EDP) algorithm}, a polynomial-time greedy algorithm
+that minimizes the read balance gap subject to the storage balance constraint.
+We further extend the EDP algorithm for heterogeneous environments.  Extensive
+trace-driven simulations and testbed experiments show that EDP improves read
+performance and preserves storage balance.  In addition to storage efficiency
+and data availability respectively provided by deduplication and erasure
+coding, our work further enhances the parallel I/O performance of a
+distributed storage system through the design of a load-balance data placement
+scheme. 

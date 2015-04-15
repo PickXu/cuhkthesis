@@ -1,0 +1,19 @@
+Modern distributed storage systems aggregate multiple storage nodes to provide
+scalable platforms for managing a tremendous amount of data.  They often
+deploy deduplication to remove content-level redundancy to improve storage
+efficiency, and use erasure coding to introduce node-level redundancy to
+provide fault tolerance guarantees.  However, deduplication inevitably leads
+to unbalanced data placement, thereby degrading read performance.  In this
+paper, we study the load balance problem in distributed storage systems that
+deploy deduplication and erasure coding, and argue that it is generally
+challenging to find a data placement that simultaneously achieves both read
+balance and write balance objectives.  To this end, we formulate a
+combinatorial optimization problem, and propose a greedy, polynomial-time
+{\em Even Data Placement (EDP)} algorithm, which identifies a data placement
+that effectively achieves read balance while maintaining write balance.  We
+further extend our EDP algorithm to heterogeneous environments.  We
+demonstrate the effectiveness of our EDP algorithm under real-world workloads
+using both extensive simulations and prototype testbed experiments.  In
+particular, our testbed experiments show that our EDP algorithm reduces the
+file read time by 37.41\% compared to the baseline round-robin placement, and
+the reduction can further reach 52.11\% in a heterogeneous setting.

@@ -1,0 +1,209 @@
+\relax 
+\@writefile{toc}{\contentsline {chapter}{Abstract}{i}}
+\@writefile{toc}{\contentsline {chapter}{Acknowledgement}{v}}
+\citation{netbackup,rackspace,hp_whitewater}
+\citation{zhu08,dubnicki09}
+\citation{andrews13}
+\@writefile{toc}{\contentsline {chapter}{\numberline {1}Introduction}{1}}
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{toc}{\contentsline {section}{\numberline {1.1}Overview}{1}}
+\newlabel{sec:intro}{{1.1}{1}}
+\citation{chowdhury13}
+\citation{liu09,nam11,dubnicki09}
+\@writefile{toc}{\contentsline {section}{\numberline {1.2}Contributions}{2}}
+\@writefile{toc}{\contentsline {section}{\numberline {1.3}Organization}{4}}
+\citation{quinlan02}
+\citation{rabin81}
+\citation{quinlan02}
+\@writefile{toc}{\contentsline {chapter}{\numberline {2}Background Study}{5}}
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{toc}{\contentsline {section}{\numberline {2.1}Basics}{5}}
+\newlabel{sec:background}{{2.1}{5}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1.1}Deduplication}{5}}
+\newlabel{subsec:deduplication}{{2.1.1}{5}}
+\citation{weatherspoon02}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1.2}Erasure Coding}{6}}
+\citation{kaczmarczyk12,lillibridge13,min14}
+\citation{li15}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1.3}Integration}{7}}
+\citation{bhagwat06,Bhagwat09}
+\citation{liu09,nam11,dubnicki09}
+\citation{liu09}
+\citation{dubnicki09}
+\citation{nam11}
+\@writefile{toc}{\contentsline {section}{\numberline {2.2}Related Work}{8}}
+\newlabel{sec:related}{{2.2}{8}}
+\citation{Holland94}
+\@writefile{toc}{\contentsline {chapter}{\numberline {3}Even Data Placement}{9}}
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{toc}{\contentsline {section}{\numberline {3.1}Load Balance}{9}}
+\newlabel{sec:motivate}{{3.1}{9}}
+\@writefile{lot}{\contentsline {table}{\numberline {3.1}{\ignorespaces File read times of the baseline with/without deduplication.\relax }}{10}}
+\newlabel{tab:result_read}{{3.1}{10}}
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{fig:example_file}{{3.1(a)}{11}}
+\newlabel{sub@fig:example_file}{{(a)}{11}}
+\newlabel{fig:example_conv1}{{3.1(b)}{11}}
+\newlabel{sub@fig:example_conv1}{{(b)}{11}}
+\newlabel{fig:example_conv2}{{3.1(c)}{11}}
+\newlabel{sub@fig:example_conv2}{{(c)}{11}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces Layouts of the baseline policy with/without deduplication (the data and parity chunks are represented in white and gray colors, respectively).\relax }}{11}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {Files to be written}}}{11}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {Without deduplicateslication}}}{11}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(c)}{\ignorespaces {With deduplication}}}{11}}
+\newlabel{fig:example}{{3.1}{11}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.2}Problem}{12}}
+\newlabel{sec:problem}{{3.2}{12}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.1}Optimization Problem}{13}}
+\newlabel{subsec:p_form}{{3.2.1}{13}}
+\newlabel{eq:gap}{{3.3}{14}}
+\newlabel{problem:gap}{{1}{15}}
+\citation{chowdhury13}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.2}Heterogeneity Awareness}{16}}
+\newlabel{subsec:heterogeneity}{{3.2.2}{16}}
+\newlabel{eqn:hete_min_max}{{3.6}{16}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.3}Even Data Placement Algorithm}{17}}
+\newlabel{sec:algorithm}{{3.3}{17}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.1}Main Idea}{17}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.2}Algorithm Details}{18}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces Even Data Placement Algorithm\relax }}{20}}
+\newlabel{alg:edp}{{1}{20}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.3}Example}{21}}
+\newlabel{fig:edp_demo_files}{{3.2(a)}{22}}
+\newlabel{sub@fig:edp_demo_files}{{(a)}{22}}
+\newlabel{fig:edp_demo_file0}{{3.2(b)}{22}}
+\newlabel{sub@fig:edp_demo_file0}{{(b)}{22}}
+\newlabel{fig:edp_demo_file1}{{3.2(c)}{22}}
+\newlabel{sub@fig:edp_demo_file1}{{(c)}{22}}
+\newlabel{fig:edp_demo_swap}{{3.2(d)}{22}}
+\newlabel{sub@fig:edp_demo_swap}{{(d)}{22}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.2}{\ignorespaces \relax \fontsize  {17.28}{22}\selectfont  Illustration of the EDP algorithm for two files, where $N = 3$, $C = 2$, $(n,k) = (3,2)$. \relax }}{22}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {Example of files: assuming $( d_{1,1}, d_{1,2}, d_{1,3}) = (2,0,1)$ and $(d_{2,1}, d_{2,2}, d_{2,3}) = (1,1,0)$. }}}{22}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces { Greedy placement of File\nobreakspace {}1: $(u_{1,1}, u_{1,2}, u_{1,3}) = (0,2,2)$; $(d_{2,1}, d_{2,2}, d_{2,3}) = (1,2,1)$. }}}{22}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(c)}{\ignorespaces { Greedy placement of File 2. $(u_{2,1}, u_{2,2}, u_{2,3})=(2,0,0)$. }}}{22}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(d)}{\ignorespaces { Swapping E and D. }}}{22}}
+\newlabel{fig:edp_demo}{{3.2}{22}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.4}Complexity Analysis}{23}}
+\newlabel{subsubsec:complexity}{{3.3.4}{23}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.5}Extensions}{23}}
+\newlabel{subsec:cedp}{{3.3.5}{23}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.4}Implementation}{24}}
+\newlabel{sec:impl}{{3.4}{24}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.3}{\ignorespaces Architectural overview of our prototype.\relax }}{25}}
+\newlabel{fig:prototype}{{3.3}{25}}
+\citation{zhu08}
+\citation{openssl}
+\citation{reed60}
+\citation{pg:14:jer}
+\citation{pmg:13:gfc10}
+\citation{kyotocab}
+\@writefile{toc}{\contentsline {section}{\numberline {3.5}Evaluation}{26}}
+\newlabel{sec:evaluation}{{3.5}{26}}
+\citation{tarasov12}
+\citation{linux}
+\citation{linux}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.5.1}Datasets}{27}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.5.2}Simulations}{29}}
+\newlabel{fig:fsl_analysis}{{3.4(a)}{29}}
+\newlabel{sub@fig:fsl_analysis}{{(a)}{29}}
+\newlabel{fig:linux}{{3.4(b)}{29}}
+\newlabel{sub@fig:linux}{{(b)}{29}}
+\newlabel{fig:linuxtar}{{3.4(c)}{29}}
+\newlabel{sub@fig:linuxtar}{{(c)}{29}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.4}{\ignorespaces Cumulative distributions of files versus performance gaps for the baseline and EDP algorithms.\relax }}{29}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {FSLHOME}}}{29}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {LINUX }}}{29}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(c)}{\ignorespaces {LINUXTAR }}}{29}}
+\newlabel{fig:trace_gap}{{3.4}{29}}
+\citation{Sathiamoorthy13}
+\citation{ford10,Sathiamoorthy13}
+\newlabel{fig:fsl_readb}{{3.5(a)}{31}}
+\newlabel{sub@fig:fsl_readb}{{(a)}{31}}
+\newlabel{fig:fsl_degradedb}{{3.5(b)}{31}}
+\newlabel{sub@fig:fsl_degradedb}{{(b)}{31}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.5}{\ignorespaces Comparisons on read balance and degraded read balance between the baseline and EDP algorithms. \relax }}{31}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces { Read balance (FSLHOME) }}}{31}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces { Degraded read balance (FSLHOME) }}}{31}}
+\newlabel{fig:balance}{{3.5}{31}}
+\citation{li10}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.5.3}Testbed Experiments}{33}}
+\newlabel{subsec:testbed}{{3.5.3}{33}}
+\newlabel{fig:testbed_homo}{{3.7(a)}{35}}
+\newlabel{sub@fig:testbed_homo}{{(a)}{35}}
+\newlabel{fig:testbed_homo_var}{{3.7(b)}{35}}
+\newlabel{sub@fig:testbed_homo_var}{{(b)}{35}}
+\newlabel{fig:testbed_hete}{{3.7(c)}{35}}
+\newlabel{sub@fig:testbed_hete}{{(c)}{35}}
+\newlabel{fig:testbed_hete_var}{{3.7(d)}{35}}
+\newlabel{sub@fig:testbed_hete_var}{{(d)}{35}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.7}{\ignorespaces Average normalized read latency for files of LINUX.\relax }}{35}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces { Homogeneous, fixed-size chunking }}}{35}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces { Homogeneous, variable-size chunking }}}{35}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(c)}{\ignorespaces { Heterogeneous, fixed-size chunking }}}{35}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(d)}{\ignorespaces { Heterogeneous, variable-size chunking }}}{35}}
+\newlabel{fig:testbed_homo_latency}{{3.8(a)}{36}}
+\newlabel{sub@fig:testbed_homo_latency}{{(a)}{36}}
+\newlabel{fig:testbed_hete_latency}{{3.8(b)}{36}}
+\newlabel{sub@fig:testbed_hete_latency}{{(b)}{36}}
+\newlabel{fig:tar_hete_latency}{{3.8(c)}{36}}
+\newlabel{sub@fig:tar_hete_latency}{{(c)}{36}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.8}{\ignorespaces Read latency distributions of Linux 3.16.3 and LINUXTAR (the files in the x-axis are sorted by the order that they are written to the prototype).\relax }}{36}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces { Homogeneous, LINUX 3.16.3}}}{36}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces { Heterogeneous, LINUX 3.16.3}}}{36}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(c)}{\ignorespaces { Heterogeneous, LINUXTAR }}}{36}}
+\newlabel{fig:latency}{{3.8}{36}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.5.4}Computational Overhead}{38}}
+\newlabel{subsec:overhead}{{3.5.4}{38}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.9}{\ignorespaces Batch processing time of the baseline and EDP with various numbers of files in a batch.\relax }}{39}}
+\newlabel{fig:file_num}{{3.9}{39}}
+\newlabel{fig:fsl_hete}{{3.6(a)}{40}}
+\newlabel{sub@fig:fsl_hete}{{(a)}{40}}
+\newlabel{fig:linux_hete}{{3.6(b)}{40}}
+\newlabel{sub@fig:linux_hete}{{(b)}{40}}
+\newlabel{fig:linuxtar_hete}{{3.6(c)}{40}}
+\newlabel{sub@fig:linuxtar_hete}{{(c)}{40}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.6}{\ignorespaces Read latency improvements of EDP and CEDP over baseline.\relax }}{40}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces { FSLHOME }}}{40}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces { LINUX }}}{40}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(c)}{\ignorespaces { LINUXTAR }}}{40}}
+\newlabel{fig:sim_hete}{{3.6}{40}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {4}Conclusions}{41}}
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{toc}{\contentsline {section}{\numberline {4.1}Summary}{41}}
+\newlabel{sec:conclusion}{{4.1}{41}}
+\bibstyle{ieee}
+\bibdata{paper}
+\bibcite{linux}{1}
+\bibcite{rackspace}{2}
+\bibcite{netbackup}{3}
+\bibcite{hp_whitewater}{4}
+\bibcite{andrews13}{5}
+\bibcite{Bhagwat09}{6}
+\bibcite{bhagwat06}{7}
+\@writefile{toc}{\contentsline {chapter}{Bibliography}{42}}
+\bibcite{chowdhury13}{8}
+\bibcite{dubnicki09}{9}
+\bibcite{kyotocab}{10}
+\bibcite{ford10}{11}
+\bibcite{min14}{12}
+\bibcite{Holland94}{13}
+\bibcite{kaczmarczyk12}{14}
+\bibcite{li10}{15}
+\bibcite{li15}{16}
+\bibcite{lillibridge13}{17}
+\bibcite{liu09}{18}
+\bibcite{nam11}{19}
+\bibcite{openssl}{20}
+\bibcite{pg:14:jer}{21}
+\bibcite{pmg:13:gfc10}{22}
+\bibcite{quinlan02}{23}
+\bibcite{rabin81}{24}
+\bibcite{reed60}{25}
+\bibcite{Sathiamoorthy13}{26}
+\bibcite{tarasov12}{27}
+\bibcite{weatherspoon02}{28}
+\bibcite{zhu08}{29}

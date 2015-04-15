@@ -1,0 +1,146 @@
+\chapter{Introduction}
+\section{Overview}
+\label{sec:intro}
+
+Demands for scalable storage services have been surging in these years.
+Distributed storage systems aggregate multiple storage nodes (or servers)
+as a single storage pool, and provide scalable platforms for managing an
+ever-increasing scale of data.  One major storage
+application is {\em backup storage}, in which users regularly generate data
+backups for their important data.  To provide scalability, many commercial
+backup service providers \cite{netbackup, rackspace, hp_whitewater} have
+deployed distributed storage systems for backup management. 
+
+%Three factors concern a customer the most when choosing among a group of
+%backup services: 1) \textit{data reliability}; 2) \textit{backup throughput};
+%3) \textit{read throughput}.  In addition, \textit{storage efficiency} of a
+%backup storage system should be maximized to reduce storage cost for massive
+%volume of data.
+
+{\em Deduplication} is a well-developed technology that improves storage 
+efficiency of distributed storage systems. Backup storage products often use
+deduplication \cite{zhu08,dubnicki09} to remove content-level redundancy.
+Deduplication divides data into chunks, and stores only system-wide unique
+chunks and uses small references to refer duplicate chunks to already stored
+unique chunks.  Deduplication can effectively reduce the storage space in
+practical storage workloads, e.g., by 20$\times$ \cite{andrews13}.  
+	
+%To enable scalable and reliable storage, researchers from academia (e.g., 
+%\cite{bhagwat06,Bhagwat09,liu09,nam11}) and industry (e.g., \cite{dubnicki09})
+%have designed and evaluated distributed deduplication storage systems. 
+
+
+%In addition, since node failures are prevalent in practice
+%\cite{ghemawat03,ford10}, distributed storage systems also deploy
+%\textit{erasure coding} to introduce node-level redundancy to ensure fault
+%tolerance.  Compared to replication, erasure coding provides fault tolerance
+%with significantly lower node-level redundancy, and thus has been used by
+%enterprises for their production storage systems (e.g., Google \cite{ford10},
+%Microsoft \cite{huang12}, Facebook \cite{Sathiamoorthy13}).  
+
+%Yet, as we point out in Section~\ref{sec:motivate}, the file read performance
+%in such systems will be worse than a system without deduplication as chunks of
+%a file can cluster on single node, which bottlenecks the file read operation.  
+However, deduplication causes duplicate data chunks to refer to existing
+identical data chunks that are scattered across different nodes in an
+unpredictable way, thereby making load balance difficult to achieve.
+Conventional data placement is unaware of deduplication, and attempts to
+write similar amounts of data to different nodes to maintain {\em storage
+balance}.  Without deduplication, the similar amounts of data are read from
+different nodes, so {\em read balance} is also maintained.  However, when
+deduplication is enabled, the chunks of a file may refer to existing duplicate
+chunks of another file in different nodes.  Thus, file chunks may be clustered
+in a small number of nodes, thereby degrading read performance.  
+In heterogeneous
+environments where nodes have varying I/O bandwidths \cite{chowdhury13}, the
+degradation of read performance can be even more severe if the file chunks are
+clustered in low-bandwidth nodes.  Poor read performance is undesirable for
+backup storage systems, as it prolongs the restore window. It also lengthens 
+the system downtime during disaster recovery.
+
+%The major cause of the issue is that conventional chunk distribution
+%algorithms are unaware of the effects of deduplication, and mainly attempt to
+%distribute data chunks to storage nodes so that the consumptions of disk
+%space on the storage nodes are balanced, which we call the \textit{storage
+%balance}, or the amounts of data chunks that are distributed to the
+%storage nodes in each upload are balanced, which we call the
+%\textit{write balance}.  When reading a file from the systems with
+%conventional chunk distribution algorithms, however, the property of
+%\textit{read balance}, which requires equal number of data chunks of the
+%file to be downloaded from each storage node, can not be preserved.  With
+%limited network bandwidth and parallel data access from each storage
+%node, read imbalance can drastically impact the read latency of files.
+
+\section{Contributions}
+
+In this paper, we study the load balance problem in a reliable distributed
+deduplication storage system, which deploys deduplication for storage
+efficiency and erasure coding for reliability.  Our storage system setting is
+similar to those in prior studies \cite{liu09,nam11,dubnicki09}.  While the
+load balance problem described above is due to deduplication, we include
+erasure coding in our analysis to reflect a more practical storage system
+setting that addresses both storage efficiency and reliability. 
+
+We argue that in such a system setting,  conventional data placement cannot
+simultaneously achieve both read balance and storage balance objectives.  This
+motivates us to identify a deduplication-aware data placement policy that
+addresses the trade-off between read balance and storage balance.  We make the
+following contributions.
+
+{\bf $\bullet$ Optimization problem:} We formulate a combinatorial optimization
+problem, whose objective is to find a data placement policy that maximizes
+read balance, while all nodes store similar amounts of data.  Our problem
+formulation is based on parallel I/O access mode in a distributed storage
+system. It also addresses reliability based on erasure coding.  We further
+extend the problem for heterogeneous environments.
+
+{\bf $\bullet$ Even data placement (EDP) algorithm:} The optimization problem is
+difficult to solve since it has a huge solution space and depends on the
+deduplication pattern.  We thus propose a greedy 
+\textit{Even Data Placement (EDP)} algorithm, which determines an efficient
+data placement in polynomial time.  We also propose an extended cost-based EDP
+(CEDP) algorithm to balance the read/write cost distributions.
+
+{\bf $\bullet$ Prototype implementation:} We implement a distributed storage
+system prototype that incorporates both deduplication and erasure coding.  Our
+prototype is deployable in a networked environment.  
+
+{\bf $\bullet$ Simulations and testbed experiments:}  We conduct simulations
+and testbed experiments under real-world workloads.  We show that the baseline
+approach used in conventional data placement causes the data distributions of
+some files to deviate from the even distribution by over 50\%, yet EDP
+effectively balances the data distribution.  Testbed experiments show that our
+EDP algorithm reduces the file read time of the baseline by 37.41\% and
+52.11\% in homogeneous and heterogeneous settings, respectively. 
+
+%, our main goal is to improve file read performance in a reliable distributed storage system with deduplication by achieving the data read balance, and, at the meantime, preserving the data write balance and storage balance, for each file.
+%The main idea is to smartly distribute unique data chunks to nodes according to information on duplicate chunks, which makes our data distribution algorithm \textit{deduplication-aware}. 
+%We will show that, in a real distributed storage cluster, it is computationally expensive to find the optimal distribution solution by testing all possible distribution strategies. 
+%And we will present, \textit{even data placement (EDP)}, a polynomial time algorithm to place unique data so that future reads on each node for a file will be as even as possible. 
+%In real storage clusters, download bandwidth of each node can be different, which we call the \textit{network heterogeneity}, and the definition of read balance in such setting is distinct from the one we mentioned above.  To tackle the network heterogeneity, we introduce the \textit{download cost} of each node, which indicates the latency of downloading one chunk from the storage node, and the read balance of a file now evolves into downloading data chunks of the file from each storage node with equal overall download cost.
+
+%Typical heterogeneous cost associated with each storage node includes expense per block of data, download time per block of data, loss probability per block of data and etc. 
+%As our work aims at improving file download performance, we take heterogeneity in link bandwidth of each node into consideration, and derive the \textit{cost-based even data placement (CEDP)} algorithm. 
+
+%We show that CEDP can further improve file read performance over EDP in real storage cluster in Section~\ref{sec:evaluation}. 
+
+%\item \textbf{Trace Analysis} In addition to illustrating the problem via simple examples, we conduct extensive trace analysis on real-world public backup traces. Through the trace study, we show the severity of the imbalance problem in real-world storage systems so at to motivate our project. We also evaluate the performance of our algorithm and prototype using these traces.
+
+%\item \textbf{Problem Investigation} We formulate an optimization problem that maximizes the evenness of data distribution for each file in a distribution storage system with deduplication. We showed that, despite of the complexity from its integral programming nature, the single file distribution problem can be handled by greedy algorithm efficiently. We further enhance the optimization problem via adding extra practical constraints. The first practical constraint is that each node should receive equal number of unique blocks in each batch distribution. To ensure this constraint, we buffer multiple files inside a distribution buffer before optimizing the distribution strategy for all the files. We also extend the problem to adapt to the scenario where nodes have heterogeneous hardware settings, and this will improve the performance of our distribution algorithm in real storage clusters.
+
+%\item \textbf{Even Data Placement Algorithms} We present efficient, polynomial time data placement algorithms to handle the complicated distribution problems online.  The algorithm can evenly distribute data chunks based on two types of metrics, either number of chunks of a file on each node or total download time of chunks of a file on each node.  We conduct extensive simulations to validate the efficiency of the algorithms.  And the result shows that our data placement algorithm can achieve nearly-optimal distribution of data in most scenarios. 
+
+\section{Organization}
+The rest of the paper is organized as follows: 
+Section~\ref{sec:background} presents the basics of reliable distributed
+deduplication systems. 
+Section~\ref{sec:motivate} explains the load imbalance issue
+via a motivating example. 
+Section \ref{sec:problem} formulates the optimization problem that addresses
+load balance. 
+Section~\ref{sec:algorithm} presents our proposed algorithms. 
+Section~\ref{sec:impl} describes the implementation details of our prototype.
+Section~\ref{sec:evaluation} presents results from simulation and testbed
+experiments. 
+Section~\ref{sec:related} presents related work, and finally
+Section~\ref{sec:conclusion} concludes the paper. 

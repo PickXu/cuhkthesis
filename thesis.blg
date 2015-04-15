@@ -1,0 +1,51 @@
+This is BibTeX, Version 0.99d (TeX Live 2012/Debian)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: thesis.aux
+The style file: ieee.bst
+Database file #1: paper.bib
+Warning--to sort, need author or key in netbackup
+Warning--to sort, need author or key in rackspace
+Warning--to sort, need author or key in hp_whitewater
+Warning--to sort, need author or key in linux
+You've used 29 entries,
+            2118 wiz_defined-function locations,
+            631 strings with 8366 characters,
+and the built_in function-call counts, 8888 in all, are:
+= -- 751
+> -- 570
+< -- 2
++ -- 227
+- -- 198
+* -- 588
+:= -- 1505
+add.period$ -- 82
+call.type$ -- 29
+change.case$ -- 184
+chr.to.int$ -- 0
+cite$ -- 33
+duplicate$ -- 336
+empty$ -- 734
+format.name$ -- 198
+if$ -- 1833
+int.to.chr$ -- 0
+int.to.str$ -- 29
+missing$ -- 21
+newline$ -- 143
+num.names$ -- 50
+pop$ -- 280
+preamble$ -- 1
+purify$ -- 157
+quote$ -- 0
+skip$ -- 207
+stack$ -- 0
+substring$ -- 198
+swap$ -- 45
+text.length$ -- 2
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 114
+warning$ -- 4
+while$ -- 55
+width$ -- 31
+write$ -- 281
+(There were 4 warnings)

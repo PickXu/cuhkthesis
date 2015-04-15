@@ -1,0 +1,79 @@
+\section{Related Work}
+\label{sec:related}
+
+%write bandwidth \cite{muthitacharoen01} and
+While deduplication effectively reduces storage space, it leads to degradation
+of read performance due to {\em fragmentation}, in which logically sequential
+data is scattered across physical address space.  Recent studies propose
+techniques to improve read performance of deduplication systems, for example,
+by selective rewrites \cite{kaczmarczyk12,lillibridge13,min14} or hybrid
+inline/offline deduplication \cite{li15}.  Such read-enhancement techniques
+target a single node, while our work considers a distributed setting and
+improves read performance by maintaining load balance across nodes. 
+
+%In a deduplication backup storage system, the fragmentation causes data of
+%%the latest backup being scattered across older backups.  As a result, the
+%time of restoring the latest backup can be significantly increased.
+%To relieve the drop in restore performance for latest backups, 
+%Fu {\em et al.}\cite{min14} takes advantage of similarity of content between
+%contiguous backups to accurately identify and re-write containers that will
+%cause fragmentation.  Note that these studies focus on the data fragmentation
+%problem within a single storage server. 
+
+%Deduplication has been studied in distributed environments.  
+%Existing studies on distributed deduplication mainly aim for achieving highly
+%scalable throughput and capacity \cite{dub1}.  
+%To improve deduplication efficiency, similarity-based data dispatching
+%\cite{Bhagwat09,xia11} has been proposed to store data with high redundancy in
+%the same storage node.  Read performance in distributed deduplication is also
+%an issue.  One solution is to store all chunks of a single file in one node
+%\cite{balasubramanian14}, yet large files may be aggregated in few nodes and
+%degrade load balancing. 
+%In order for optimal I/O performance in distributed storage systems, data of
+%files should be evenly spread across storage devices to utilize the maximum
+%I/O capacity.  %However, the deployed deduplication may cause some chunks
+%from one file to aggregate in some nodes, which inevitably affects file
+%access performance \cite{zheng11}. 
+%Our work balances the distribution of chunks of files in distributed
+%deduplication to improve parallel I/O performance.
+
+%{\bf Distributed Reliable Deduplication Storage Systems:} 
+%Given a set of files to be stored in a distributed storage system, the problem of distributed storage allocations has been studied from different aspects. 
+%Green {\em et al.} \cite{greenan10} focus on the placement of data given the reliability costs of storage nodes, and seek to maximize reliability of XOR-based erasure codes on heterogeneous devices. 
+%Given a total storage budget (e.g., a file), Leong {\em et al.} \cite{leong12} investigate the problem of distributed storage allocation, and show that different storage allocations result different reliability of one object. 
+%Also, they find that the optimal allocations often have nonintuitive structure and are difficult to specify \cite{leong12}. 
+Reliability of chunks in distributed deduplication has also been studied. It
+is shown that chunks with different popularities have different degrees of
+reliability, so they should be replicated proportionally
+\cite{bhagwat06,Bhagwat09}.  Some distributed storage systems deploy
+deduplication and erasure coding to improve storage efficiency and data
+availability \cite{liu09,nam11,dubnicki09}. 
+%find that, in deduplication storage systems, each chunk is of different
+%popularity, and, to improve reliability of the system, they propose to
+%replicate each chunk proportionally to the logarithmic of its popularity.
+R-ADMAD \cite{liu09} deploys deduplication with variable-size chunking over
+erasure-coded storage systems.  Hydrastor \cite{dubnicki09} deploys
+deduplication and erasure coding for commercial backup storage.  Reliability
+analysis in distributed deduplication is also studied \cite{nam11}.  Our work
+addresses load balance in a setting with deduplication and erasure coding,
+which to our knowledge is not addressed in prior studies. 
+%and they introduce the concepts of chunk reliability and chunk loss severity.
+%With the deployed data deduplication, the total space needed to store can be minimized in a distributed storage system. 
+%However, chunks from one file may be distributed across a set of different storage servers, which results in aggravated network-access times in the congested data center networks \cite{benson10, kandula09}.   
+
+%{\bf Heterogeneous Storage Environments:} 
+%Real-world storage systems are upgraded over time, and storage nodes tend to
+%have heterogeneous capabilities, such as transmission bandwidth
+%\cite{zaharia08}.  Chowdhury {\em et al.} \cite{chowdhury13} select the
+%endpoints as data destinations to avoid congested links so as to improve the
+%write performance of replica placements.  In our work, we also take the
+%network heterogeneity into consideration when we distribute data chunks to
+%improve the file read performance.
+
+%Also, the available resources of each storage node may vary depending on the current access loads. 
+%Through exploiting the heterogeneity in node bandwidths, a lot of studies seek to optimize performance of distributed storage systems. 
+%Wang {\em et al.} \cite{wang14} minimize regeneration time of coded data in distributed storage systems with heterogeneous link capacities via bypassing bottleneck links using minimum cost spanning tree and balancing amount of data transferred by each node under the constrait of MDS property.
+%Zhu {\em et al.} \cite{zhu12b} propose a cost-based recovery heuristic for boosting failure recovery for RAID-6 codes in a heterogeneous environment. 
+%They also propose an efficient probing mechanism to measure the link transmission capability for each node in a cluster timely. 
+%To effectively alleviate hotspots and speed up MapReduce jobs in a MapReduce cluster, Ananthanarayanan {\em et al.} \cite{ananthanarayanan11} measure the access rate of each stored chunk and replicate chunks based on their popularity.
+
